@@ -7,7 +7,7 @@ public class Scheduler {
 
   public Scheduler() {
     processes = new ArrayList<>();
-    for (int i = 0; i < (new Random()).nextInt(2, 5); i++) {
+    for (int i = 0; i < (new Random()).nextInt(3, 5); i++) {
       AddProcess(new Process());
     }
     Sort();
@@ -32,6 +32,13 @@ public class Scheduler {
     return null;
   }
 
+  public Process GetProcessByName(String name) {
+    for (Process process : processes) {
+      if (process.GetName().equals(name)) return process;
+    }
+    return null;
+  }
+
   public void AddProcess(Process item) {
     processes.add(item);
   }
@@ -45,6 +52,33 @@ public class Scheduler {
         }
       }
     }
+  }
+
+  public ArrayList<Thread> getThreadsTray() {
+    ArrayList<Thread> threads = new ArrayList<>();
+    for (Process pr:
+         processes) {
+      for (int j = 0; j < pr.GetLength(); j++) {
+        threads.add(pr.GetThreadByIndex(j));
+      }
+    }
+
+    for (int i = 0; i < threads.size() - 1; i++) {
+      for (int j = i + 1; j < threads.size(); j++) {
+        if (threads.get(i).getTime() > threads.get(j).getTime()) {
+          Collections.swap(threads, i, j);
+        }
+      }
+    }
+
+    return threads;
+  }
+
+  public int getIndexProcessByName(String name) {
+    for (int i = 0; i < processes.size(); i++) {
+      if (processes.get(i).GetName().equals(name)) return i;
+    }
+    return -1;
   }
 
   public String ToString() {

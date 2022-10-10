@@ -6,6 +6,7 @@ public class Process {
   private final String name;
   private int time;
   private final ArrayList<Thread> threads;
+  private int countEndedThreads = 0;
 
   private short state = 0;
 
@@ -13,7 +14,7 @@ public class Process {
     this.name = RandomName.GetName();
     threads = new ArrayList<>();
     for (int i = 0; i < (new Random()).nextInt(2, 10); i++)
-      AddThread(new Thread());
+      AddThread(new Thread(name));
     Sort();
   }
 
@@ -69,6 +70,36 @@ public class Process {
   public void ExecuteAll() {
     Sort();
     Exec();
+  }
+
+  public void ExecuteThread(Thread thread) {
+    if (countEndedThreads == 0) {
+      this.state = 1;
+      System.out.printf(
+          "process %s start\n", name
+      );
+    }
+    if (countEndedThreads == threads.size()) {
+      this.state = 2;
+      System.out.printf(
+          "process %s ready\n", name
+      );
+    }
+    else {
+      System.out.printf(
+          "  -thread %s start in process %s\n", thread.getName(), name
+      );
+      for (Thread th:
+          threads) {
+        if (th.getName().equals(thread.getName())) {
+          th.setState(true);
+          System.out.printf(
+              "  -thread %s ready in process %s\n", th.getName(), name
+          );
+          countEndedThreads++;
+        }
+      }
+    }
   }
 
   public void Exec() {

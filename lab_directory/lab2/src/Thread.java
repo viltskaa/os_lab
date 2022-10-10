@@ -5,12 +5,17 @@ public class Thread {
   private final int time;
   private final Fiber fiber = new Fiber();
   private boolean state = false;
+  private final String processName;
 
-  public Thread() {
+  public Thread(String procName) {
     name = RandomName.GetName();
     fiber.Generate();
     Random random = new Random();
     time = random.nextInt(10, 200);
+    processName = procName;
+  }
+  public String getProcessName() {
+    return processName;
   }
 
   public String getName() {
